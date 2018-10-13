@@ -1,0 +1,52 @@
+body,html{
+    margin: 0;
+}
+
+#Wrapper {
+    color: none;
+    /* Leave blank for now */
+}
+
+#Background-Image {
+    background-image: url(Images/BikeShares.jpg);
+    background-size: cover;
+    position: relative;
+    min-height: 100%;
+    background-position: center
+}
+
+#Webpage-Title {
+    color: white;
+    font-weight: 200px;
+}
+
+
+#button1 {
+    margin-top: 300px;
+    font-weight: 100px;
+    font-size: 25px;
+}
+
+#button2 { 
+    margin-top: 50px;
+    font-weight: 100px;
+    font-size: 25px;
+}
+
+#button3 { 
+    margin-top: 50px;
+    font-weight: 100px;
+    font-size: 25px;
+}
+
+#Graph1-Icon {
+    padding-left: 10px;
+}
+
+#Graph2-Icon {
+    padding-left: 10px;
+}
+
+#Graph3-Icon {
+    padding-left: 10px;
+}
