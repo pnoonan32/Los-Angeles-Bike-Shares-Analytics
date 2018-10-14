@@ -2,6 +2,9 @@ import csv
 import datetime as dt
 from math import sin, cos, sqrt, atan2, radians
 import collections
+import plotly.plotly as ply
+import plotly.graph_objs as go
+import plotly.tools as tls
 
 # approximate radius of earth in km
 Radius_of_earth = 6373.0
@@ -56,7 +59,7 @@ def computed_distance(latitude1, longitude1, latitude2, longitude2):
 def main():
     rows = parse()
     #append computations from computed_distance() into average_distances_sum 
-    average_distances_sum = []
+    average_distances_total = []
     for row in rows:
         # Taking into account potential empty strings that may corrupt data  
         if (
@@ -67,7 +70,7 @@ def main():
            ):
            continue
 
-        average_distances_sum.append(computed_distance(
+        average_distances_total.append(computed_distance(
             row['Starting Station Latitude'],
             row['Starting Station Longitude'],
             row['Ending Station Latitude'],
@@ -77,6 +80,8 @@ def main():
     starting_station_ID_counter = collections.Counter([row['Starting Station ID'] for row in rows])
 
     ending_station_ID_counter = collections.Counter([row['Ending Station ID'] for row in rows])
+
+    commuters = plan_duration_and_trip_route(rows)
 
      # Answer for Average Distance is in Kilometers(Km)
 
@@ -90,13 +95,70 @@ def main():
 
     # Retuns Dictionary of all desired data
     return {
-        'Average Distance':sum(computed_distance)/len(computed_distance), 
+        'Average Distance':sum(average_distances_total)/len(average_distances_total), 
     
     #"most_common(1)" means return the MOST common or the number 1 recurring Starting Station ID
     'Most Popular Starting Station ID': starting_station_ID_counter.most_common(1),
     
     'Most Popular Ending Station ID': ending_station_ID_counter.most_common(1),
+
+    'Number of Regular Commuters': commuters
     }
+
+
+# Will display number of commuters for monthly pass each day ANd number of commuters for flex passes each day
+def plan_duration_and_trip_route(rows):
+
+    dates = {}
+    for row in rows:
+        if row['Plan Duration'] == 0:
+            continue
+        if row['Passholder Type'] == 'Staff Annual':
+            continue
+
+        # Filter out weekends
+        date = row['Start Time'] 
+        if date.weekday() == 5 or date.weekday() == 6:
+            continue
+
+
+        date = date.strftime("%Y-%m-%d")
+
+        
+        # If we encounter a Start Time for the first time, add 1 to Monthly pass or flex pass:
+        if date not in dates:
+            dates[date] = {'Monthly Pass': 0, 'Flex Pass': 0}
+        dates[date][ row['Passholder Type'] ] += 1
+
+    return dates
+
+# Data Visualizations 
+def plotly_graphs(dates):
+
+    dates = sorted(dates.items())
+    fig = go.Figure()
+    fig.add_bar(
+        x=[k for k,v in dates],
+        y=[v['Monthly Pass'] for k,v in dates],
+        name='Monthly Pass',
+    )
+    fig.add_bar(
+        x=[k for k,v in dates],
+        y=[v['Flex Pass'] for k,v in dates],
+        name='Flex Pass',
+    )
+    fig.layout.title = 'Monthly and Flex Pass Rides per Weekday'
+
+    # ply.sign(username, APIkey)
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+
+
+
+
+
 
 if __name__ == "__main__":
     x = main()
