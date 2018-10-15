@@ -57,8 +57,11 @@ def computed_distance(latitude1, longitude1, latitude2, longitude2):
 
 
 def main():
+
+    # rows yields all manipulated data
     rows = parse()
-    #append computations from computed_distance() into average_distances_sum 
+
+    #append computations from computed_distance() into average_distances_total 
     average_distances_total = []
     for row in rows:
         # Taking into account potential empty strings that may corrupt data  
@@ -81,7 +84,10 @@ def main():
 
     ending_station_ID_counter = collections.Counter([row['Ending Station ID'] for row in rows])
 
-    commuters = plan_duration_and_trip_route(rows)
+
+    # Set veriables for graphs in main function passing rows that yields manipulated
+    commuters = plan_duration_and_passholder_type(rows)
+    passholdertypes = trip_route_data(rows)
 
      # Answer for Average Distance is in Kilometers(Km)
 
@@ -102,14 +108,16 @@ def main():
     
     'Most Popular Ending Station ID': ending_station_ID_counter.most_common(1),
 
-    'Number of Regular Commuters': commuters
+    'Number of Regular Commuters': commuters,
+
+    'Most Popular Passholder Types': passholdertypes 
     }
 
 
 # Will display number of commuters for monthly pass each day ANd number of commuters for flex passes each day
-def plan_duration_and_trip_route(rows):
+def plan_duration_and_passholder_type(rows):
 
-    dates = {}
+    passholder_type_dates = {}
     for row in rows:
         if row['Plan Duration'] == 0:
             continue
@@ -126,28 +134,36 @@ def plan_duration_and_trip_route(rows):
 
         
         # If we encounter a Start Time for the first time, add 1 to Monthly pass or flex pass:
-        if date not in dates:
-            dates[date] = {'Monthly Pass': 0, 'Flex Pass': 0}
-        dates[date][ row['Passholder Type'] ] += 1
+        if date not in passholder_type_dates:
+            passholder_type_dates[date] = {'Monthly Pass': 0, 'Flex Pass': 0}
+        passholder_type_dates[date][ row['Passholder Type'] ] += 1
 
-    return dates
+    return passholder_type_dates
 
-# Data Visualizations 
-def plotly_graphs(dates):
 
-    dates = sorted(dates.items())
+
+# Data Visualizations total amount of monthly passes and flex passes each day 
+def monthly_pass_and_flex_pass_graph(passholder_types_dates):
+
+
+    passholder_types_dates = sorted(passholder_types_dates.items())
     fig = go.Figure()
+
+    # Bar chart for Monthly Pass
     fig.add_bar(
-        x=[k for k,v in dates],
-        y=[v['Monthly Pass'] for k,v in dates],
-        name='Monthly Pass',
+        x = [k for k,v in passholder_types_dates],
+        y = [v['Monthly Pass'] for k,v in passholder_types_dates],
+        name = 'Monthly Pass'
     )
+
+    # Bar chart for Flex Pass
     fig.add_bar(
-        x=[k for k,v in dates],
-        y=[v['Flex Pass'] for k,v in dates],
-        name='Flex Pass',
+        x = [k for k,v in passholder_types_dates],
+        y = [v['Flex Pass'] for k,v in passholder_types_dates],
+        name = 'Flex Pass'
     )
-    fig.layout.title = 'Monthly and Flex Pass Rides per Weekday'
+
+    fig.layout.title = 'Monthly Pass and Flex Pass Rides per Weekday'
 
     # ply.sign(username, APIkey)
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
@@ -157,7 +173,59 @@ def plotly_graphs(dates):
 
 
 
+# Will display number of Trip Routes for One Ways each day AND number of Trip Routes for Round Trips each day
+def trip_route_data(rows):
 
+    trip_route_dates = {}
+    for row in rows:
+        
+        # Filter out weekends
+        date = row['Start Time'] 
+        if date.weekday() == 5 or date.weekday() == 6:
+            continue
+
+
+        date = date.strftime("%Y-%m-%d")
+
+        
+        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
+        if date not in trip_route_dates:
+            trip_route_dates[date] = {'Round Trip': 0, 'One Way': 0}
+        trip_route_dates[date][ row['Trip Route Category'] ] += 1
+
+    return trip_route_dates
+
+
+
+
+
+# Data Visualizations for total amount of Round Trip (Trip Route) types and One Way (Trip Route) each day 
+def round_trip_and_oneway_routes_graph(trip_route_dates):
+
+    trip_route_dates = sorted(trip_route_dates.items())
+    fig = go.Figure()
+
+    #Bar chart for Round Trip
+    fig.add_bar(
+        x = [k for k,v in trip_route_dates],
+        y = [v['Round Trip'] for k,v in trip_route_dates],
+        name='RoundTrip'
+    )
+
+    #Bar chart for One Way
+    fig.add_bar(
+        x = [k for k,v in trip_route_dates],
+        y = [v['One Way'] for k,v in trip_route_dates],
+        name = 'One Way'
+    )
+
+    fig.layout.title = 'Most Popular Passholder Types'
+
+    # ply.sign(username, APIkey)
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 
 if __name__ == "__main__":
