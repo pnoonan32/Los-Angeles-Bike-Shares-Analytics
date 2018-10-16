@@ -1,3 +1,7 @@
+# Run code like this in terminal to obtain Plotly URLs: round_trip_and_oneway_routes_graph(x['Most Popular Trip Routes'])
+# Where "x" = main() and is used to access the data in the main function
+
+
 import csv
 import datetime as dt
 from math import sin, cos, sqrt, atan2, radians
@@ -8,6 +12,8 @@ import plotly.tools as tls
 
 # approximate radius of earth in km
 Radius_of_earth = 6373.0
+
+
 
 # parse() is just to manipulate the data to be more flexible for future purposes
 def parse():
@@ -87,9 +93,25 @@ def main():
 
     # Set veriables for graphs in main function passing rows that yields manipulated
     commuters = plan_duration_and_passholder_type(rows)
-    passholdertypes = trip_route_data(rows)
+    most_popular_trip_routes = trip_route_data(rows)
 
-     # Answer for Average Distance is in Kilometers(Km)
+    # For 'Total Round Trip Trip Routes'
+    round_trip_total = sorted(most_popular_trip_routes.items()) 
+        #To access 'Round Trip' values in nested dictionary
+    round_trip_total = [v['Round Trip'] for k,v in round_trip_total]
+   
+    # For 'Total One Way Trip Routes'
+    one_way_total = sorted(most_popular_trip_routes.items())
+        #To access 'One Way' values in nested dictionary
+    one_way_total = [v['One Way'] for k,v in one_way_total]
+
+
+    #for 'Time Intervals for One Way Trips'
+    
+    oneway_time_intervals = one_way_trip_route_and_duration_data(rows)
+
+
+
 
      #Answer for 'Most Popular Starting Station ID' follows the
      #following format: Ex.) 
@@ -101,6 +123,7 @@ def main():
 
     # Retuns Dictionary of all desired data
     return {
+            # Answer for Average Distance is in Kilometers(Km)
         'Average Distance':sum(average_distances_total)/len(average_distances_total), 
     
     #"most_common(1)" means return the MOST common or the number 1 recurring Starting Station ID
@@ -110,14 +133,25 @@ def main():
 
     'Number of Regular Commuters': commuters,
 
-    'Most Popular Passholder Types': passholdertypes 
+    'Most Popular Trip Routes': most_popular_trip_routes, 
+
+    'Total Round Trip Trip Routes': sum(round_trip_total),
+
+    'Total One Way Trip Routes': sum(one_way_total),
+
+    'Time Intervals for One Way Trips': oneway_time_intervals
     }
 
 
 # Will display number of commuters for monthly pass each day ANd number of commuters for flex passes each day
 def plan_duration_and_passholder_type(rows):
 
-    passholder_type_dates = {}
+    # rows yields all manipulated data
+    # rows = parse()
+    
+    # Holding Data from plan_duration_and_passholder_type(rows)
+    passholder_types_dates = {}
+
     for row in rows:
         if row['Plan Duration'] == 0:
             continue
@@ -132,13 +166,14 @@ def plan_duration_and_passholder_type(rows):
 
         date = date.strftime("%Y-%m-%d")
 
-        
-        # If we encounter a Start Time for the first time, add 1 to Monthly pass or flex pass:
-        if date not in passholder_type_dates:
-            passholder_type_dates[date] = {'Monthly Pass': 0, 'Flex Pass': 0}
-        passholder_type_dates[date][ row['Passholder Type'] ] += 1
+        # The Dates are the KEYS and the dictionary of {'Monthly Pass' and 'Flex Pass'} are the VALUES
 
-    return passholder_type_dates
+        # If we encounter a Start Time for the first time, add 1 to Monthly pass or flex pass:
+        if date not in passholder_types_dates:
+            passholder_types_dates[date] = {'Monthly Pass': 0, 'Flex Pass': 0}
+        passholder_types_dates[date][ row['Passholder Type'] ] += 1
+
+    return passholder_types_dates
 
 
 
@@ -151,7 +186,11 @@ def monthly_pass_and_flex_pass_graph(passholder_types_dates):
 
     # Bar chart for Monthly Pass
     fig.add_bar(
+
+        # k is short for "Key"
         x = [k for k,v in passholder_types_dates],
+
+        # v is short for "Value"
         y = [v['Monthly Pass'] for k,v in passholder_types_dates],
         name = 'Monthly Pass'
     )
@@ -176,7 +215,11 @@ def monthly_pass_and_flex_pass_graph(passholder_types_dates):
 # Will display number of Trip Routes for One Ways each day AND number of Trip Routes for Round Trips each day
 def trip_route_data(rows):
 
+    # rows yields all manipulated data
+    # rows = parse()
+
     trip_route_dates = {}
+
     for row in rows:
         
         # Filter out weekends
@@ -187,6 +230,8 @@ def trip_route_data(rows):
 
         date = date.strftime("%Y-%m-%d")
 
+
+        # The Dates are the KEYS and the dictionary of {'Round Trip' and 'One Way'} are the VALUES
         
         # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
         if date not in trip_route_dates:
@@ -207,7 +252,9 @@ def round_trip_and_oneway_routes_graph(trip_route_dates):
 
     #Bar chart for Round Trip
     fig.add_bar(
+            # k is short for "Key"
         x = [k for k,v in trip_route_dates],
+            # v is short for "Value"
         y = [v['Round Trip'] for k,v in trip_route_dates],
         name='RoundTrip'
     )
@@ -219,13 +266,104 @@ def round_trip_and_oneway_routes_graph(trip_route_dates):
         name = 'One Way'
     )
 
-    fig.layout.title = 'Most Popular Passholder Types'
+    fig.layout.title = 'Most Popular Trip Routes'
 
     # ply.sign(username, APIkey)
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
     url = ply.plot(fig, auto_open=False)
     print(url)
     open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+
+
+def one_way_trip_route_and_duration_data(rows):
+    
+    one_way_trip_route_and_duration_dictionary = {}
+
+    for row in rows:
+        
+            # Ignore non-existant values
+        duration = row['Duration']
+        if duration == 0:
+            continue
+            # We only want "One Way" data
+        if row['Trip Route Category'] == "Round Trip":
+            continue
+
+        # date = row['Start Time'] 
+        # if date.weekday() == 5 or date.weekday() == 6:
+        #     continue
+
+
+        # date = date.strftime("%Y-%m-%d")
+
+        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
+        
+        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
+        if duration not in one_way_trip_route_and_duration_dictionary:
+
+            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
+            one_way_trip_route_and_duration_dictionary[duration] = {'One Way': 0}
+        one_way_trip_route_and_duration_dictionary[duration][ row['Trip Route Category'] ] += 1
+
+    return one_way_trip_route_and_duration_dictionary
+
+
+def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictionary):
+    data_for_oneway_trips_and_duration = sorted(one_way_trip_route_and_duration_dictionary.items())
+    fig = go.Figure()
+
+    #Bar chart for One way time intervals
+    fig.add_bar(
+            # k is short for "Key"
+        x = [k for k,v in data_for_oneway_trips_and_duration],
+            # v is short for "Value"
+        y = [v['One Way'] for k,v in data_for_oneway_trips_and_duration],
+        name='One Way Time Intervals'
+    )
+
+    fig.layout.title = 'Time Intervals for One Way Trips'
+
+    # ply.sign(username, APIkey)
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+
+
+# THIS FUNCTION IS INCOMPLETE
+def dummy_functionn(rows):
+    
+    one_way_trip_route_and_duration_dictionary = {}
+
+    for row in rows:
+        
+            # Ignore non-existant values
+        duration = row['Duration']
+        if duration == 0:
+            continue
+            # We only want "One Way" data
+        if row['Trip Route Category'] == "Round Trip":
+            continue
+
+        date = row['Start Time'] 
+        if date.weekday() == 5 or date.weekday() == 6:
+            continue
+
+
+        date = date.strftime("%Y-%m-%d")
+
+        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
+        
+        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
+        if duration not in one_way_trip_route_and_duration_dictionary:
+
+            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
+            one_way_trip_route_and_duration_dictionary[duration] = {'One Way': 0}
+        one_way_trip_route_and_duration_dictionary[duration][ row['Trip Route Category'] ] += 1
+
+    return one_way_trip_route_and_duration_dictionary
+
+
 
 
 if __name__ == "__main__":
