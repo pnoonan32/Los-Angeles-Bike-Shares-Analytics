@@ -110,6 +110,7 @@ def main():
     
     oneway_time_intervals = one_way_trip_route_and_duration_data(rows)
 
+    dummy_test = dummy_date_functionn(rows)
 
 
 
@@ -139,7 +140,9 @@ def main():
 
     'Total One Way Trip Routes': sum(one_way_total),
 
-    'Time Intervals for One Way Trips': oneway_time_intervals
+    'Time Intervals for One Way Trips': oneway_time_intervals,
+
+    'Test': dummy_test
     }
 
 
@@ -309,6 +312,7 @@ def one_way_trip_route_and_duration_data(rows):
 
 
 def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictionary):
+    
     data_for_oneway_trips_and_duration = sorted(one_way_trip_route_and_duration_dictionary.items())
     fig = go.Figure()
 
@@ -331,9 +335,46 @@ def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictio
 
 
 # THIS FUNCTION IS INCOMPLETE
-def dummy_functionn(rows):
+def dummy_date_functionn(rows):
     
-    one_way_trip_route_and_duration_dictionary = {}
+    dummy_dict = {}
+
+    for row in rows:
+        
+            # Ignore non-existant values
+        duration = row['Duration']
+        if duration == 0:
+            continue
+            # We only want "One Way" data
+        if row['Trip Route Category'] == "Round Trip":
+            continue
+            # Filter out weekends
+        date = row['Start Time'] 
+        if date.weekday() == 5 or date.weekday() == 6:
+            continue
+
+
+        date = date.strftime("%Y-%m-%d")
+
+        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
+        
+        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
+        if date not in dummy_dict:
+        
+            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
+            dummy_dict[date] = {'One Way': 0}
+        dummy_dict[date][ row['Trip Route Category'] ] += 1
+        # dummy_dict[duration] = dummy_dict[date]
+        
+
+
+    return dummy_dict
+
+
+
+def dummy_duration_functionn(rows):
+    
+    dummy_duration_dict = {}
 
     for row in rows:
         
@@ -345,26 +386,58 @@ def dummy_functionn(rows):
         if row['Trip Route Category'] == "Round Trip":
             continue
 
-        date = row['Start Time'] 
-        if date.weekday() == 5 or date.weekday() == 6:
-            continue
-
-
-        date = date.strftime("%Y-%m-%d")
-
         # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
         
         # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
-        if duration not in one_way_trip_route_and_duration_dictionary:
-
+        if duration not in dummy_duration_dict:
+        
             # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
-            one_way_trip_route_and_duration_dictionary[duration] = {'One Way': 0}
-        one_way_trip_route_and_duration_dictionary[duration][ row['Trip Route Category'] ] += 1
+            dummy_duration_dict[duration] = {'One Way': 0}
+        dummy_duration_dict[duration][ row['Trip Route Category'] ] += 1
+        # dummy_dict[duration] = dummy_dict[date]
+        
 
-    return one_way_trip_route_and_duration_dictionary
+
+    return dummy_duration_dict
 
 
 
+
+def dummy_graph(dummy_duration_dict, one_way_trip_route_and_duration_dictionary, trip_route_dates):
+
+    duration_data_for_graph = sorted(dummy_duration_dict.items())
+        # "x" short fpr one_way_trip_route_and_duration_dictionary data
+    x_data = sorted(one_way_trip_route_and_duration_dictionary.items())
+
+    round_trip_and_one_way = sorted(trip_route_dates.items())
+
+
+    fig = go.Figure()
+
+    # #Bar chart for One way time intervals
+    # fig.add_bar(
+    #         # k is short for "Key"
+    #     x = [k for k,v in duration_data_for_graph],
+    #         # v is short for "Value"
+    #     y = [v['One Way'] for k,v in round_trip_and_one_way],
+    #     name='One Way Durations'
+    # )
+
+    fig.add_bar(
+        # k is short for "Key"
+        x = [k for k,v in duration_data_for_graph],
+            # v is short for "Value"
+        y = [k ['One Way'] for k,v in x_data],
+        name='Round Trip Durations'
+    )
+
+    fig.layout.title = 'vnjdbvj'
+
+    # ply.sign(username, APIkey)
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 if __name__ == "__main__":
     x = main()
