@@ -86,8 +86,9 @@ def main():
             row['Ending Station Longitude']
             ))
 
+        # Most used Bike (indicated by Bike ID) from Starting Station
     starting_station_ID_counter = collections.Counter([row['Starting Station ID'] for row in rows])
-
+        # Most used Bike (indicated by Bike ID) from Ending Station
     ending_station_ID_counter = collections.Counter([row['Ending Station ID'] for row in rows])
 
 
@@ -112,7 +113,7 @@ def main():
 
     dummy_test = dummy_date_functionn(rows)
 
-
+    dummy_test2 = dummy_duration_functionn(rows)
 
      #Answer for 'Most Popular Starting Station ID' follows the
      #following format: Ex.) 
@@ -125,13 +126,15 @@ def main():
     # Retuns Dictionary of all desired data
     return {
             # Answer for Average Distance is in Kilometers(Km)
+                #Answer to Question 1
         'Average Distance':sum(average_distances_total)/len(average_distances_total), 
     
     #"most_common(1)" means return the MOST common or the number 1 recurring Starting Station ID
+        #Answer(s) to Question 2
     'Most Popular Starting Station ID': starting_station_ID_counter.most_common(1),
-    
+        #Answer(s) to Question 2
     'Most Popular Ending Station ID': ending_station_ID_counter.most_common(1),
-
+        #Answer to Question 4
     'Number of Regular Commuters': commuters,
 
     'Most Popular Trip Routes': most_popular_trip_routes, 
@@ -142,7 +145,9 @@ def main():
 
     'Time Intervals for One Way Trips': oneway_time_intervals,
 
-    'Test': dummy_test
+    'Test': dummy_test,
+
+    'Test2': dummy_test2
     }
 
 
@@ -312,7 +317,7 @@ def one_way_trip_route_and_duration_data(rows):
 
 
 def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictionary):
-    
+
     data_for_oneway_trips_and_duration = sorted(one_way_trip_route_and_duration_dictionary.items())
     fig = go.Figure()
 
@@ -332,6 +337,7 @@ def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictio
     url = ply.plot(fig, auto_open=False)
     print(url)
     open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+
 
 
 # THIS FUNCTION IS INCOMPLETE
@@ -403,41 +409,56 @@ def dummy_duration_functionn(rows):
 
 
 
-def dummy_graph(dummy_duration_dict, one_way_trip_route_and_duration_dictionary, trip_route_dates):
+def dummy_graph(dummy_duration_dict, trip_route_dates):
 
     duration_data_for_graph = sorted(dummy_duration_dict.items())
         # "x" short fpr one_way_trip_route_and_duration_dictionary data
-    x_data = sorted(one_way_trip_route_and_duration_dictionary.items())
+    # x_data = sorted(one_way_trip_route_and_duration_dictionary.items())
 
     round_trip_and_one_way = sorted(trip_route_dates.items())
 
 
     fig = go.Figure()
-
-    # #Bar chart for One way time intervals
-    # fig.add_bar(
-    #         # k is short for "Key"
-    #     x = [k for k,v in duration_data_for_graph],
-    #         # v is short for "Value"
-    #     y = [v['One Way'] for k,v in round_trip_and_one_way],
-    #     name='One Way Durations'
-    # )
-
-    fig.add_bar(
-        # k is short for "Key"
+    # k is short for "Key"
+    # v is short for "Value"
+    fig.add_scatter3d(
+        
         x = [k for k,v in duration_data_for_graph],
-            # v is short for "Value"
-        y = [k ['One Way'] for k,v in x_data],
-        name='Round Trip Durations'
+            
+        y = [v ['One Way'] for k,v in duration_data_for_graph],
+
+         z = [k for k,v in round_trip_and_one_way],
+        #Graph accessories
+        mode='markers',
+    marker=dict(
+        size=18,               
+        colorscale='Viridis',   # choose a colorscale
+        opacity=0.8
+    )
+    ),
+
+    go.Layout(
+        margin=dict(
+        l=0,
+        r=0,
+        b=0,
+        t=0,
+        
+    )
     )
 
-    fig.layout.title = 'vnjdbvj'
 
+    fig.layout.title = 'ScatterPlot'
     # ply.sign(username, APIkey)
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
     url = ply.plot(fig, auto_open=False)
     print(url)
-    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+    open("scatterplot.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+
+
+
+
+
 
 if __name__ == "__main__":
     x = main()

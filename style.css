@@ -1,4 +1,4 @@
-body,html{
+body,html {
     margin: 0;
 }
 
@@ -20,6 +20,18 @@ body,html{
     font-weight: 200px;
 }
 
+#LA-Bike-Share-Heading {
+    margin-top: 50px;
+}
+
+#Quote {
+    margin-top: 50px;
+    color: white;
+}
+
+a:hover, a:link {
+    text-decoration: none;
+}
 
 #button1 {
     margin-top: 300px;
@@ -28,13 +40,13 @@ body,html{
 }
 
 #button2 { 
-    margin-top: 50px;
+    margin-top: 25px;
     font-weight: 100px;
     font-size: 25px;
 }
 
 #button3 { 
-    margin-top: 50px;
+    margin-top: 25px;
     font-weight: 100px;
     font-size: 25px;
 }

@@ -20,14 +20,49 @@
 
         <!-- Cover Image with Title -->
         <div id="Background-Image">
-            <div id="Webpage-Title" class="mx-auto text-center display-4">Los Angeles Bike Shares Analytics</div>
+            <div id="Webpage-Title" style="color:black">
+                    <nav class="navbar navbar-dark bg-dark">
+                            <a class="navbar-brand" href="#">Navbar w/ text</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                              <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarText">
+                              <ul class="navbar-nav mr-auto">
+                                <li class="nav-item active">
+                                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" href="#">Features</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" href="#">Pricing</a>
+                                </li>
+                              </ul>
+                              <span class="navbar-text">
+                                Navbar text with an inline element
+                              </span>
+                            </div>
+                          </nav>
+            </div>
         <!--\\ Cover Image with Title //-->
 
 
+        <h1 id="LA-Bike-Share-Heading"class="mx-auto text-center display-4" style="color:white">Bike Shares in Los Angeles, California</h1>
+
+        <blockquote id="Quote" class="blockquote">
+                <p class="mb-0 mx-5">"Several American cities have reacted to the invasion of e-scooters by throttling their introduction, although they reduce car traffic and pollution. San Francisco banned the vehicles in early June and is now introducing a 24-month pilot programme: the city will only issue permits to up to five companies and they will be allowed to operate a maximum of 2,500 scooters in total."</p>
+                <footer class="blockquote-footer mx-5"> <cite title="Source Title">The Economist</cite></footer>
+              </blockquote>
+
+                    <!-- GET RID OF UNDERLINES -->
+
+            <!-- Graphs yielding analysis for Bike Share Data -->
         <div id="Wrapper-for-Graph1" class="mx-5">
+            <a href="scatterplot.html">
         <button type="button" class="btn btn-primary btn-lg btn-block" id="button1">Graph 1
             <i id="Graph1-Icon" class="fa fa-bar-chart fa-lg fa-2x"></i>
         </button>
+            </a>
         </div>
 
         <div id="Wrapper-For-Graph2" class="mx-5">
@@ -44,8 +79,10 @@
         </button>
             </a>
         </div>
+        <!--\\ Graphs yielding analysis for Bike Share Data //-->
 
         </div>
+
     </div>
 
 
