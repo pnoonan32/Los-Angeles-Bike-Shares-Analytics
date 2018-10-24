@@ -115,6 +115,8 @@ def main():
 
     dummy_test2 = dummy_duration_functionn(rows)
 
+    # plan_d = test_function(rows)
+
      #Answer for 'Most Popular Starting Station ID' follows the
      #following format: Ex.) 
      #('whatever is the Starting Station ID is ' Number of occurences)
@@ -148,6 +150,8 @@ def main():
     'Test': dummy_test,
 
     'Test2': dummy_test2
+
+    # 'Test3': plan_d
     }
 
 
@@ -280,7 +284,7 @@ def round_trip_and_oneway_routes_graph(trip_route_dates):
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
     url = ply.plot(fig, auto_open=False)
     print(url)
-    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+    open("most-popular-trip-routes.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 
 def one_way_trip_route_and_duration_data(rows):
@@ -330,7 +334,7 @@ def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictio
         name='One Way Time Intervals'
     )
 
-    fig.layout.title = 'Time Intervals for One Way Trips'
+    # fig.layout.title = 'Time Intervals for One Way Trips'
 
     # ply.sign(username, APIkey)
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
@@ -368,11 +372,18 @@ def dummy_date_functionn(rows):
         if date not in dummy_dict:
         
             # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
-            dummy_dict[date] = {'One Way': 0}
+            dummy_dict[date] = {'One Way': 0, 'Duration': []}
         dummy_dict[date][ row['Trip Route Category'] ] += 1
         # dummy_dict[duration] = dummy_dict[date]
+        dummy_dict[date]['Duration'].append(row['Duration'])
         
-
+    for dates in dummy_dict:
+        temp = dummy_dict[dates]['Duration']
+        if temp:
+            # Divide by 60 to convert to minutes from seconds
+            dummy_dict[dates]['Duration'] = (sum(temp)/len(temp)) /60 
+        else:
+            dummy_dict[dates]['Duration'] = 0
 
     return dummy_dict
 
@@ -409,25 +420,31 @@ def dummy_duration_functionn(rows):
 
 
 
-def dummy_graph(dummy_duration_dict, trip_route_dates):
+def dummy_graph(dummy_dict):
 
-    duration_data_for_graph = sorted(dummy_duration_dict.items())
+    duration_data_for_graph = sorted(dummy_dict.items())
         # "x" short fpr one_way_trip_route_and_duration_dictionary data
     # x_data = sorted(one_way_trip_route_and_duration_dictionary.items())
 
-    round_trip_and_one_way = sorted(trip_route_dates.items())
-
-
+    # round_trip_and_one_way = sorted(trip_route_dates.items())
+    
     fig = go.Figure()
+
+    fig.layout.scene.xaxis.title = 'X-axis: Date'
+            
+    fig.layout.scene.yaxis.title = 'Y-axis: One Way Trip Routes'
+
+    fig.layout.scene.zaxis.title = 'Z-axis: Average Duration'
     # k is short for "Key"
     # v is short for "Value"
     fig.add_scatter3d(
         
+        # Date
         x = [k for k,v in duration_data_for_graph],
-            
+        # One Way Trips    
         y = [v ['One Way'] for k,v in duration_data_for_graph],
-
-         z = [k for k,v in round_trip_and_one_way],
+        # Duration (Minutes)
+         z = [v['Duration'] for k,v in duration_data_for_graph],
         #Graph accessories
         mode='markers',
     marker=dict(
@@ -437,24 +454,48 @@ def dummy_graph(dummy_duration_dict, trip_route_dates):
     )
     ),
 
-    go.Layout(
-        margin=dict(
-        l=0,
-        r=0,
-        b=0,
-        t=0,
+    # go.Layout(
+    #     margin=dict(
+    #     l=0,
+    #     r=0,
+    #     b=0,
+    #     t=0,
         
-    )
-    )
+    # )
+    # )
+    # import pdb;pdb.set_trace()
 
-
-    fig.layout.title = 'ScatterPlot'
+    # fig.layout.title = 'ScatterPlot'
     # ply.sign(username, APIkey)
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
     url = ply.plot(fig, auto_open=False)
     print(url)
     open("scatterplot.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
+
+
+
+# def test_function(rows):
+
+#     plan_duration_dict = {}
+
+
+#     for row in rows:
+
+#         plan_d = row['Plan Duration']
+#         # Filter out weekends
+#         date = row['Start Time'] 
+#         if date.weekday() == 5 or date.weekday() == 6:
+#             continue
+
+
+#         date = date.strftime("%Y-%m-%d")
+
+
+#         if plan_d is not plan_duration_dict:
+#             plan_duration_dict[date] = plan_d
+        
+#         plan_duration_dict[date][row ['Plan Duration']] += 1 
 
 
 

@@ -1,0 +1,41 @@
+#Data-Visualizations-Heading {
+    color:white; 
+    font-size:35px;
+    font-weight: 700px;
+    margin-top:200px;
+}
+
+a:hover, a:link {
+    text-decoration: none !important;
+    border-bottom: 0px;
+}
+
+#button1 {
+    margin-top: 50px;
+    font-weight: 100px;
+    font-size: 25px;
+}
+
+#button2 { 
+    margin-top: 25px;
+    font-weight: 100px;
+    font-size: 25px;
+}
+
+#button3 { 
+    margin-top: 25px;
+    font-weight: 100px;
+    font-size: 25px;
+}
+
+#Graph1-Icon {
+    padding-left: 10px;
+}
+
+#Graph2-Icon {
+    padding-left: 10px;
+}
+
+#Graph3-Icon {
+    padding-left: 10px;
+}

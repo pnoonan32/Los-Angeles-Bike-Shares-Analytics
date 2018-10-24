@@ -1,85 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="LBA.css">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
 
     <!-- Font Awesome  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>LA Bike Share Analytics</title>
 </head>
+
 <body>
 
     <div id="Wrapper">
 
-        <!-- Cover Image with Title -->
+        <!-- Cover Image with Title & Navbar -->
         <div id="Background-Image">
             <div id="Webpage-Title" style="color:black">
-                    <nav class="navbar navbar-dark bg-dark">
-                            <a class="navbar-brand" href="#">Navbar w/ text</a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                              <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarText">
-                              <ul class="navbar-nav mr-auto">
-                                <li class="nav-item active">
-                                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item">
-                                  <a class="nav-link" href="#">Features</a>
-                                </li>
-                                <li class="nav-item">
-                                  <a class="nav-link" href="#">Pricing</a>
-                                </li>
-                              </ul>
-                              <span class="navbar-text">
-                                Navbar text with an inline element
-                              </span>
+
+                    <div class="pos-f-t">
+                            <div class="collapse" id="navbarToggleExternalContent">
+                              <div class="bg-dark p-4">
+                                <h5 class="text-white h4">Los Angeles Bike Shares Navigation Menu</h5>
+                                <span class="text-muted"><i class="fa fa-bicycle fa-lg"></i></span>
+                                <ul class="navbar-nav mr-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="statistical-inferences.html" target="_blank">Additional Data Visualizations & Statistical Inferences</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="jay-walder.html" target="_blank">Bike Shares with Jay Walder</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Pricing</a>
+                                        </li>
+                                    </ul>
+                              </div>
                             </div>
-                          </nav>
+                            <nav class="navbar navbar-dark">
+                              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                              </button>
+                            </nav>
+                          </div>
+                <!-- <nav class="navbar navbar-dark bg-dark">
+                    <a class="navbar-brand" href="#">Menu</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarText">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Pricing</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav> -->
+
             </div>
-        <!--\\ Cover Image with Title //-->
+            <!--\\ Cover Image with Title & Navbar //-->
 
+            <!-- Webpage Heading -->
+            <h1 id="LA-Bike-Share-Heading" class="mx-auto text-center display-2" style="color:white">Bike Shares in Los Angeles,
+                California</h1>
+            <!-- \\ Webpage Heading // -->
 
-        <h1 id="LA-Bike-Share-Heading"class="mx-auto text-center display-4" style="color:white">Bike Shares in Los Angeles, California</h1>
-
-        <blockquote id="Quote" class="blockquote">
-                <p class="mb-0 mx-5">"Several American cities have reacted to the invasion of e-scooters by throttling their introduction, although they reduce car traffic and pollution. San Francisco banned the vehicles in early June and is now introducing a 24-month pilot programme: the city will only issue permits to up to five companies and they will be allowed to operate a maximum of 2,500 scooters in total."</p>
+            <blockquote id="Quote" class="blockquote">
+                <p class="mb-0 mx-5">"Several American cities have reacted to the invasion of e-scooters by throttling their
+                    introduction, although they reduce car traffic and pollution. San Francisco banned the vehicles in early
+                    June and is now introducing a 24-month pilot programme: the city will only issue permits to up to five
+                    companies and they will be allowed to operate a maximum of 2,500 scooters in total."</p>
                 <footer class="blockquote-footer mx-5"> <cite title="Source Title">The Economist</cite></footer>
-              </blockquote>
+            </blockquote>
 
-                    <!-- GET RID OF UNDERLINES -->
+            <div class="jumbotron bg-transparent mb-0 text-center">
+                    <h1 class="display-4" style="color:white;">The Economics of Bike Shares</h1>
+                    <p class="lead mt-5" style="color:#fff;font-size:20px;font-family:Arial, Helvetica, sans-serif">Please click the "Learn More" button to see trending data, data visualizations and inferences in regards to bike shares. </p>
+                    <a class="btn btn-outline-primary btn-lg mt-5" href="statistical-inferences.html" role="button">Learn more</a>
 
-            <!-- Graphs yielding analysis for Bike Share Data -->
-        <div id="Wrapper-for-Graph1" class="mx-5">
-            <a href="scatterplot.html">
-        <button type="button" class="btn btn-primary btn-lg btn-block" id="button1">Graph 1
-            <i id="Graph1-Icon" class="fa fa-bar-chart fa-lg fa-2x"></i>
-        </button>
-            </a>
-        </div>
-
-        <div id="Wrapper-For-Graph2" class="mx-5">
-<button type="button" class="btn btn-secondary btn-lg btn-block" id="button2">Graph 2
-        <i id="Graph2-Icon" class="fa fa-bar-chart fa-lg fa-2x"></i>
-</button>
-        </div>
-        
-        <div id="Wrapper-For-Graph3" class="mx-5">
-                <!-- Get ride of underline for the href -->
-            <a href="out.html">
-        <button type="button" class="btn btn-info btn-lg btn-block" id="button3">Graph 3
-                <i id="Graph3-Icon" class="fa fa-bar-chart fa-lg fa-2x"></i>
-        </button>
-            </a>
-        </div>
-        <!--\\ Graphs yielding analysis for Bike Share Data //-->
+                  </div>
 
         </div>
 
@@ -88,9 +105,12 @@
 
 
     <!-- JavaScript script tags for Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
     <!--\\ JavaScript script tags for Bootstrap //-->
 </body>
 </html>
