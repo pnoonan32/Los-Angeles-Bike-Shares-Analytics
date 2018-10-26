@@ -1,7 +1,7 @@
-# Run code like this in terminal to obtain Plotly URLs: round_trip_and_oneway_routes_graph(x['Most Popular Trip Routes'])
-# Where "x" = main() and is used to access the data in the main function
-
-
+"""
+ Run code like this in terminal to obtain Plotly URLs: round_trip_and_oneway_routes_graph(x['Most Popular Trip Routes'])
+ Where "x" = main() and is used to access the data in the main function
+ """
 import csv
 import datetime as dt
 from math import sin, cos, sqrt, atan2, radians
@@ -109,13 +109,13 @@ def main():
 
     #for 'Time Intervals for One Way Trips'
     
-    oneway_time_intervals = one_way_trip_route_and_duration_data(rows)
+    # oneway_time_intervals = one_way_trip_route_and_duration_data(rows)
 
-    dummy_test = dummy_date_functionn(rows)
+    scatterplot = scatterplot_data(rows)
 
-    dummy_test2 = dummy_duration_functionn(rows)
+    combination_data = combination_data(rows)
 
-    # plan_d = test_function(rows)
+    dummy_test = dummy_functionn(rows)
 
      #Answer for 'Most Popular Starting Station ID' follows the
      #following format: Ex.) 
@@ -124,8 +124,9 @@ def main():
      #^^ Same logic applies with 'Most Popular Ending Station ID'
     
 
-
-    # Retuns Dictionary of all desired data
+    """
+    Retuns Dictionary of all desired data
+    """
     return {
             # Answer for Average Distance is in Kilometers(Km)
                 #Answer to Question 1
@@ -145,14 +146,18 @@ def main():
 
     'Total One Way Trip Routes': sum(one_way_total),
 
-    'Time Intervals for One Way Trips': oneway_time_intervals,
+    'Scatterplot': scatterplot,
 
-    'Test': dummy_test,
+    'Pie Chart of Combinations': combination_data,
 
-    'Test2': dummy_test2
-
-    # 'Test3': plan_d
+    'Test': dummy_test
     }
+
+
+"""
+Parsed data from csv Section
+
+"""
 
 
 # Will display number of commuters for monthly pass each day ANd number of commuters for flex passes each day
@@ -188,42 +193,6 @@ def plan_duration_and_passholder_type(rows):
     return passholder_types_dates
 
 
-
-# Data Visualizations total amount of monthly passes and flex passes each day 
-def monthly_pass_and_flex_pass_graph(passholder_types_dates):
-
-
-    passholder_types_dates = sorted(passholder_types_dates.items())
-    fig = go.Figure()
-
-    # Bar chart for Monthly Pass
-    fig.add_bar(
-
-        # k is short for "Key"
-        x = [k for k,v in passholder_types_dates],
-
-        # v is short for "Value"
-        y = [v['Monthly Pass'] for k,v in passholder_types_dates],
-        name = 'Monthly Pass'
-    )
-
-    # Bar chart for Flex Pass
-    fig.add_bar(
-        x = [k for k,v in passholder_types_dates],
-        y = [v['Flex Pass'] for k,v in passholder_types_dates],
-        name = 'Flex Pass'
-    )
-
-    fig.layout.title = 'Monthly Pass and Flex Pass Rides per Weekday'
-
-    # ply.sign(username, APIkey)
-    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
-    url = ply.plot(fig, auto_open=False)
-    print(url)
-    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
-
-
-
 # Will display number of Trip Routes for One Ways each day AND number of Trip Routes for Round Trips each day
 def trip_route_data(rows):
 
@@ -254,6 +223,121 @@ def trip_route_data(rows):
 
 
 
+def scatterplot_data(rows):
+    
+    scatterplot_dictionary = {}
+
+    for row in rows:
+        
+            # Ignore non-existant values
+        duration = row['Duration']
+        if duration == 0:
+            continue
+            # We only want "One Way" data
+        if row['Trip Route Category'] == "Round Trip":
+            continue
+            # Filter out weekends
+        date = row['Start Time'] 
+        if date.weekday() == 5 or date.weekday() == 6:
+            continue
+
+
+        date = date.strftime("%Y-%m-%d")
+
+        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
+        
+        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
+        if date not in scatterplot_dictionary:
+        
+            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
+            scatterplot_dictionary[date] = {'One Way': 0, 'Duration': []}
+        scatterplot_dictionary[date][ row['Trip Route Category'] ] += 1
+        # scatterplot_dictionary[duration] = scatterplot_dictionary[date]
+        scatterplot_dictionary[date]['Duration'].append(row['Duration'])
+        
+    for dates in scatterplot_dictionary:
+        temp = scatterplot_dictionary[dates]['Duration']
+
+        if temp:
+            # Divide by 60 to convert minutes from seconds
+            scatterplot_dictionary[dates]['Duration'] = (sum(temp)/len(temp)) / 60 
+        else:
+            scatterplot_dictionary[dates]['Duration'] = 0
+
+    return scatterplot_dictionary
+
+
+
+def combination_data(rows):
+    
+    combinations_dictionary = {}
+
+    for row in rows:
+        
+        # Creates a tuple that counts the number of each occuring combination of all possbillities
+        key = ( row['Trip Route Category'], row['Passholder Type'] )
+
+        if key not in combinations_dictionary:
+            combinations_dictionary[key] = 0
+
+        combinations_dictionary[key] += 1
+
+    return combinations_dictionary 
+
+
+
+def dummy_functionn(rows):
+    
+    dummy_dict = {}
+
+    for row in rows:
+        
+        #
+        key = ( row['Trip Route Category'], row['Passholder Type'] )
+
+        if key not in dummy_dict:
+            dummy_dict[key] = 0
+
+        dummy_dict[key] += 1
+
+    return dummy_dict
+
+"""
+Graphs Section
+"""
+
+# Data Visualizations total amount of monthly passes and flex passes each day 
+def regular_commuters_graph(passholder_types_dates):
+# Omitted Walk up because there are NOT using bike shares regularly 
+
+    passholder_types_dates = sorted(passholder_types_dates.items())
+    fig = go.Figure()
+
+    # Bar chart for Monthly Pass
+    fig.add_bar(
+
+        # k is short for "Key"
+        x = [k for k,v in passholder_types_dates],
+
+        # v is short for "Value"
+        y = [v['Monthly Pass'] for k,v in passholder_types_dates],
+        name = 'Monthly Pass'
+    )
+
+    # Bar chart for Flex Pass
+    fig.add_bar(
+        x = [k for k,v in passholder_types_dates],
+        y = [v['Flex Pass'] for k,v in passholder_types_dates],
+        name = 'Flex Pass'
+    )
+
+    fig.layout.title = 'Monthly Pass and Flex Pass Rides per Weekday'
+
+    # ply.sign(username, APIkey)
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("Monthly-and-Flex-Pass.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 
 # Data Visualizations for total amount of Round Trip (Trip Route) types and One Way (Trip Route) each day 
@@ -287,218 +371,51 @@ def round_trip_and_oneway_routes_graph(trip_route_dates):
     open("most-popular-trip-routes.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 
-def one_way_trip_route_and_duration_data(rows):
-    
-    one_way_trip_route_and_duration_dictionary = {}
 
-    for row in rows:
-        
-            # Ignore non-existant values
-        duration = row['Duration']
-        if duration == 0:
-            continue
-            # We only want "One Way" data
-        if row['Trip Route Category'] == "Round Trip":
-            continue
+def combination_piechart(dummy_dict):
 
-        # date = row['Start Time'] 
-        # if date.weekday() == 5 or date.weekday() == 6:
-        #     continue
+    trip_route_and_passholder_type_combinations = sorted(dummy_dict.items())
 
-
-        # date = date.strftime("%Y-%m-%d")
-
-        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
-        
-        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
-        if duration not in one_way_trip_route_and_duration_dictionary:
-
-            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
-            one_way_trip_route_and_duration_dictionary[duration] = {'One Way': 0}
-        one_way_trip_route_and_duration_dictionary[duration][ row['Trip Route Category'] ] += 1
-
-    return one_way_trip_route_and_duration_dictionary
-
-
-def one_way_trip_route_and_duration_graph(one_way_trip_route_and_duration_dictionary):
-
-    data_for_oneway_trips_and_duration = sorted(one_way_trip_route_and_duration_dictionary.items())
     fig = go.Figure()
 
-    #Bar chart for One way time intervals
-    fig.add_bar(
-            # k is short for "Key"
-        x = [k for k,v in data_for_oneway_trips_and_duration],
-            # v is short for "Value"
-        y = [v['One Way'] for k,v in data_for_oneway_trips_and_duration],
-        name='One Way Time Intervals'
+    fig.add_pie(
+
+            # Write combinations abbreviations later
+        labels = ["{} & {}".format(*k) for (k,v) in trip_route_and_passholder_type_combinations],
+
+        values= [v for (k, v) in trip_route_and_passholder_type_combinations]
     )
 
-    # fig.layout.title = 'Time Intervals for One Way Trips'
 
     # ply.sign(username, APIkey)
     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
     url = ply.plot(fig, auto_open=False)
     print(url)
-    open("out.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
+    open("Trip-Route-and-Passholder-Type-Combinations.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 
 
-# THIS FUNCTION IS INCOMPLETE
-def dummy_date_functionn(rows):
-    
-    dummy_dict = {}
+# Plotly syntax for this function is incorrect
+# def dummy_graph(dummy_dict):
 
-    for row in rows:
-        
-            # Ignore non-existant values
-        duration = row['Duration']
-        if duration == 0:
-            continue
-            # We only want "One Way" data
-        if row['Trip Route Category'] == "Round Trip":
-            continue
-            # Filter out weekends
-        date = row['Start Time'] 
-        if date.weekday() == 5 or date.weekday() == 6:
-            continue
+#     trip_route_and_passholder_type_combinations = sorted(dummy_dict.items())
+
+#     fig = go.Figure()
+
+#     fig.add_pie(
+
+#             # Write combinations abbreviations later
+#         labels = ["{} & {}".format(*k) for (k,v) in trip_route_and_passholder_type_combinations],
+
+#         values= [v for (k, v) in trip_route_and_passholder_type_combinations]
+#     )
 
 
-        date = date.strftime("%Y-%m-%d")
-
-        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
-        
-        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
-        if date not in dummy_dict:
-        
-            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
-            dummy_dict[date] = {'One Way': 0, 'Duration': []}
-        dummy_dict[date][ row['Trip Route Category'] ] += 1
-        # dummy_dict[duration] = dummy_dict[date]
-        dummy_dict[date]['Duration'].append(row['Duration'])
-        
-    for dates in dummy_dict:
-        temp = dummy_dict[dates]['Duration']
-        if temp:
-            # Divide by 60 to convert to minutes from seconds
-            dummy_dict[dates]['Duration'] = (sum(temp)/len(temp)) /60 
-        else:
-            dummy_dict[dates]['Duration'] = 0
-
-    return dummy_dict
-
-
-
-def dummy_duration_functionn(rows):
-    
-    dummy_duration_dict = {}
-
-    for row in rows:
-        
-            # Ignore non-existant values
-        duration = row['Duration']
-        if duration == 0:
-            continue
-            # We only want "One Way" data
-        if row['Trip Route Category'] == "Round Trip":
-            continue
-
-        # The Duration are the KEYS and the dictionary of {'One Way'} are the VALUES
-        
-        # If we encounter a Start Time for the first time, add 1 to Round Trip or One Way:
-        if duration not in dummy_duration_dict:
-        
-            # You create a new key\value pair on a dictionary by assigning a value to that key. If the key doesn't exist, it's added and points to that value. If it exists, the current value it points to is overwritten. 
-            dummy_duration_dict[duration] = {'One Way': 0}
-        dummy_duration_dict[duration][ row['Trip Route Category'] ] += 1
-        # dummy_dict[duration] = dummy_dict[date]
-        
-
-
-    return dummy_duration_dict
-
-
-
-
-def dummy_graph(dummy_dict):
-
-    duration_data_for_graph = sorted(dummy_dict.items())
-        # "x" short fpr one_way_trip_route_and_duration_dictionary data
-    # x_data = sorted(one_way_trip_route_and_duration_dictionary.items())
-
-    # round_trip_and_one_way = sorted(trip_route_dates.items())
-    
-    fig = go.Figure()
-
-    fig.layout.scene.xaxis.title = 'X-axis: Date'
-            
-    fig.layout.scene.yaxis.title = 'Y-axis: One Way Trip Routes'
-
-    fig.layout.scene.zaxis.title = 'Z-axis: Average Duration'
-    # k is short for "Key"
-    # v is short for "Value"
-    fig.add_scatter3d(
-        
-        # Date
-        x = [k for k,v in duration_data_for_graph],
-        # One Way Trips    
-        y = [v ['One Way'] for k,v in duration_data_for_graph],
-        # Duration (Minutes)
-         z = [v['Duration'] for k,v in duration_data_for_graph],
-        #Graph accessories
-        mode='markers',
-    marker=dict(
-        size=18,               
-        colorscale='Viridis',   # choose a colorscale
-        opacity=0.8
-    )
-    ),
-
-    # go.Layout(
-    #     margin=dict(
-    #     l=0,
-    #     r=0,
-    #     b=0,
-    #     t=0,
-        
-    # )
-    # )
-    # import pdb;pdb.set_trace()
-
-    # fig.layout.title = 'ScatterPlot'
-    # ply.sign(username, APIkey)
-    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
-    url = ply.plot(fig, auto_open=False)
-    print(url)
-    open("scatterplot.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
-
-
-
-
-# def test_function(rows):
-
-#     plan_duration_dict = {}
-
-
-#     for row in rows:
-
-#         plan_d = row['Plan Duration']
-#         # Filter out weekends
-#         date = row['Start Time'] 
-#         if date.weekday() == 5 or date.weekday() == 6:
-#             continue
-
-
-#         date = date.strftime("%Y-%m-%d")
-
-
-#         if plan_d is not plan_duration_dict:
-#             plan_duration_dict[date] = plan_d
-        
-#         plan_duration_dict[date][row ['Plan Duration']] += 1 
-
-
-
+#     # ply.sign(username, APIkey)
+#     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+#     url = ply.plot(fig, auto_open=False)
+#     print(url)
+#     open("Trip-Route-and-Passholder-Type-Combinations.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 
 if __name__ == "__main__":

@@ -1,8 +1,7 @@
 #Data-Visualizations-Heading {
     color:white; 
-    font-size:35px;
     font-weight: 700px;
-    margin-top:200px;
+    margin-top:50px;
 }
 
 a:hover, a:link {
@@ -11,7 +10,7 @@ a:hover, a:link {
 }
 
 #button1 {
-    margin-top: 50px;
+    margin-top: 150px;
     font-weight: 100px;
     font-size: 25px;
 }
