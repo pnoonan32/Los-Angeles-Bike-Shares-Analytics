@@ -9,6 +9,11 @@ a:hover, a:link {
     border-bottom: 0px;
 }
 
+a#Home-Tab.nav-link.active {
+    background-color: #D65076;
+}
+
+
 #button1 {
     margin-top: 150px;
     font-weight: 100px;

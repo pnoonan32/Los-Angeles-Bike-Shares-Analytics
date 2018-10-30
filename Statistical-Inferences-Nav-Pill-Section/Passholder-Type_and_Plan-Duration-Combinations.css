@@ -1,4 +1,8 @@
-a#Scatterplot-Tab.nav-link.active {
+body {
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+}
+
+a#Combinations3-Tab.nav-link.active {
     background-color: #D65076;
 }
 
@@ -15,7 +19,7 @@ a#Scatterplot-Tab.nav-link.active {
 }
 
 #Sub-Section {
-    margin-right: 692px;
+    margin-right: 255px;
 }
 
 #Heading-hr {
@@ -23,6 +27,13 @@ a#Scatterplot-Tab.nav-link.active {
     border-top: 1px solid #434857;
     margin-top:160px;
     margin-left: 500px;
-    margin-right: 690px;
+    margin-right: 250px;
     background-color: #fff
+}
+
+#Nav-hr {
+    border: 0;
+    border-top: 1px solid #434857;
+    margin-left: 100px;
+    margin-right: 1080px;
 }
