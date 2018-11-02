@@ -1,8 +1,8 @@
 body {
-    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #252830 !important
 }
 
-a#Home-Tab.nav-link.active {
+a#Trip-Time-Tab.nav-link.active {
     background-color: #D65076;
 }
 
@@ -19,20 +19,15 @@ a#Home-Tab.nav-link.active {
 }
 
 #Sub-Section {
-    margin-left:100px;
-}
-
-#Home-Page {
-    margin-top: 5px;
-    margin-left: 400px;
+    margin-right: 674px;
 }
 
 #Heading-hr {
     border: 0;
     border-top: 1px solid #434857;
-    margin-top:10px;
+    margin-top:160px;
     margin-left: 500px;
-    margin-right: 825px;
+    margin-right: 664px;
     background-color: #fff
 }
 
@@ -41,4 +36,5 @@ a#Home-Tab.nav-link.active {
     border-top: 1px solid #434857;
     margin-left: 100px;
     margin-right: 1080px;
+    margin-bottom: 50px;
 }

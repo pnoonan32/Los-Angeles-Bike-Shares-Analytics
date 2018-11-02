@@ -146,6 +146,8 @@ def main():
     Retuns Dictionary of all desired data
     """
     return {
+
+        'Rows': rows,
         # Answer for Average Distance is in Kilometers(Km)
         # Answer to Question 1
         'Average Distance': sum(average_distances_total)/len(average_distances_total),
@@ -176,7 +178,7 @@ def main():
 
         '4th Pie Chart of Combinations': combinations_for_piechart4,
 
-        'Y': trip_time
+        'Trip Time': trip_time
 
         # 'Test': dummy_test
     }
@@ -407,28 +409,6 @@ def average_trip_time_data(rows):
             avg_trip_time_dictionary[trip_ids]['Duration'] = 0
 
     return avg_trip_time_dictionary
-
-
-# def longitudes_and_latitudes(rows):
-    
-#     coordinates_list = [] 
-
-#     for row in rows:
-
-#             # Account for empty excel cells:
-#         if row['Starting Station Longitude'] == 0:
-#             continue
-#         if row['Starting Station Latitude'] == 0:
-#             continue
-#         if row['Ending Station Longitude'] == 0:
-#             continue
-#         if row['Ending Station Latitude'] == 0:
-#             continue
-        
-#         longitudes = [row['Starting Station Longitude'][i], row['Ending Station Longitude'][i]]
-#         latitudes = [row['Starting Station Latitude'][i], row['Ending Station Latitude'][i]]
-
-#         coordinates_list.append(longitudes, latitudes)
 
 
         
@@ -876,32 +856,13 @@ def avg_trip_time_graph(avg_trip_time_dictionary):
     x_values = [k for k, v in trip_time_averages]
     y_values = [v['Duration'] for k, v in trip_time_averages]
 
-    # layout = go.Layout(
-    #     xaxis=dict(
-    #         color='#fff',
-    #         title='Trip ID',
-    #         zerolinecolor='rgb(255,255,255)',
-    #         tickcolor='#fff'
-    #     ),
-    #     yaxis=dict(
-    #         color='#fff',
-    #         title='Average Duration',
-    #         zerolinecolor='rgb(255,255,255)',
-    #         tickcolor='#fff'
-    #     ),
-    #     paper_bgcolor='#252830',
-    #     plot_bgcolor='#252830',
-    #     title='Average Trip Time',
-    #     legend=dict(
-    #         traceorder='normal',
-    #         font=dict(
-    #             color='#fff'
-    #         ),
-    #     )
-    # )
+    layout = go.Layout(
+        paper_bgcolor='#252830',
+        plot_bgcolor='#252830',
+    )
 
 
-    fig = go.Figure()
+    fig = go.Figure(layout=layout)
 
     fig.add_table(
 
@@ -933,6 +894,89 @@ def avg_trip_time_graph(avg_trip_time_dictionary):
     open("Average-Trip-Time.html", "w").write(
         "<h1>My cool graph</h1>" + tls.get_embed(url))
 
+
+
+def longitudes_and_latitudes_graph(rows):
+    
+    station_dict = {}
+    trip_dict = {}
+    max_counter = 1
+
+    for row in rows:
+
+        station_dict[ row['Starting Station ID'] ] = (row['Starting Station Latitude'], row['Starting Station Longitude'])
+
+        key = (row['Starting Station ID'], row['Ending Station ID'])
+        if key not in trip_dict:
+
+            trip_dict[key] = [row['Starting Station Latitude'], row['Starting Station Longitude'], row['Ending Station Latitude'], row['Ending Station Longitude'], 0]
+
+            # "+=1" for the counter i.e 0
+        trip_dict[key][4]+=1
+        max_counter = max(max_counter, trip_dict[key][4])
+
+
+
+    layout = dict(
+        title = 'Bike Share Paths',
+        showlegend = False, 
+        geo = dict(
+            scope='usa',
+            projection=dict( type='azimuthal equal area' ),
+            showland = True,
+            landcolor = 'rgb(243, 243, 243)',
+            countrycolor = 'rgb(204, 204, 204)',
+        ),
+    )
+    
+
+    stations = [ dict(
+        type = 'scattergeo',
+        locationmode = 'USA-states',
+        lon = [v[1] for k,v in station_dict.items()],
+        lat = [v[0] for k,v in station_dict.items()],
+        hoverinfo = 'text',
+            # Will show Station ID on hover
+        text = [k for k,v in station_dict.items()],
+        mode = 'markers',
+        marker = dict( 
+            size=2, 
+            color='rgb(255, 0, 0)',
+            line = dict(
+                width=3,
+                color='rgba(68, 68, 68, 0)'
+            )
+        ))]
+
+        # t is reffering to the built-in "sorted" tuple
+    trip_dict =sorted(trip_dict.items(), key=(lambda t: -t[1][4]))
+        
+    bike_share_paths = []
+    for (key, (st_lat, st_lon, end_lat, end_lon, counter)) in trip_dict[:50]:
+        bike_share_paths.append(
+        dict(
+            type = 'scattergeo',
+            locationmode = 'USA-states',
+            lon = [ st_lon, end_lon ],
+            lat = [ st_lat, end_lat ],
+            mode = 'lines',
+            line = dict(
+                width = 1,
+                color = 'red',
+            ),
+            opacity = float(counter)/float(max_counter),
+        )
+    )
+
+    import pdb; pdb.set_trace()
+
+    fig = go.Figure(data=stations + bike_share_paths, layout=layout)
+
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("Bike-Share-Trip-Path.html", "w").write(
+        "<h1>My cool graph</h1>" + tls.get_embed(url))
 
 if __name__ == "__main__":
     x = main()
