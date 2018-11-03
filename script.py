@@ -147,7 +147,8 @@ def main():
     """
     return {
 
-        'Rows': rows,
+        'Average Bike Share Path Map': rows,
+
         # Answer for Average Distance is in Kilometers(Km)
         # Answer to Question 1
         'Average Distance': sum(average_distances_total)/len(average_distances_total),
@@ -414,54 +415,6 @@ def average_trip_time_data(rows):
         
 
 
-# def distance_traveled_over_time(rows):
-
-#     distances_dict = {}
-
-#     for row in rows:
-
-#         # Filter out weekends
-#         date = row['Start Time']
-#         if date.weekday() == 5 or date.weekday() == 6:
-#             continue
-
-#         date = date.strftime("%Y-%m-%d")
-
-#         if date not in distances_dict:
-
-#             distances_dict[date] = {'Distances': []}
-#         distances_dict[date]['Distances'].append(average_distances_total)
-
-
-#     for dates in distances_dict:
-#             # temp is to access the value of 'Duration'
-#         temp = distances_dict[dates]['Distances']
-
-#         if temp:
-#             # Divide by 1.609 to convert Kilometers to Miles
-#             distances_dict[dates]['Distances'] = (sum(temp)/len(temp)) / 1.609
-#         else:
-#             # If am excel box is blank set equal to 0 so the data is not disturbed
-#             distances_dict[dates]['Distances'] = 0
-
-#     return distances_dict
-
-
-# def dummy_functionn(rows):
-
-#     dummy_dict = {}
-
-#     for row in rows:
-
-#         #
-#         key = ( row['Trip Route Category'], row['Passholder Type'] )
-
-#         if key not in dummy_dict:
-#             dummy_dict[key] = 0
-
-#         dummy_dict[key] += 1
-
-#     return dummy_dict
 
 """
 Graphs Section
@@ -827,27 +780,6 @@ def combination_piechart4(combinations_dictionary4):
     open("Trip-Routes_and_Plan-Duration-Combinations.html",
          "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
-# Plotly syntax for this function is incorrect
-# def dummy_graph(dummy_dict):
-
-#     trip_route_and_passholder_type_combinations = sorted(dummy_dict.items())
-
-#     fig = go.Figure()
-
-#     fig.add_pie(
-
-#             # Write combinations abbreviations later
-#         labels = ["{} & {}".format(*k) for (k,v) in trip_route_and_passholder_type_combinations],
-
-#         values= [v for (k, v) in trip_route_and_passholder_type_combinations]
-#     )
-
-
-#     # ply.sign(username, APIkey)
-#     ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
-#     url = ply.plot(fig, auto_open=False)
-#     print(url)
-#     open("Trip-Route-and-Passholder-Type-Combinations.html", "w").write("<h1>My cool graph</h1>" + tls.get_embed(url))
 
 def avg_trip_time_graph(avg_trip_time_dictionary):
 
@@ -968,15 +900,17 @@ def longitudes_and_latitudes_graph(rows):
         )
     )
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
+    import plotly
 
     fig = go.Figure(data=stations + bike_share_paths, layout=layout)
 
-    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
-    url = ply.plot(fig, auto_open=False)
-    print(url)
-    open("Bike-Share-Trip-Path.html", "w").write(
-        "<h1>My cool graph</h1>" + tls.get_embed(url))
+    # ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    file = plotly.offline.plot(fig, auto_open=False)
+    print(file)
+    # print(url)
+    # open("Bike-Share-Trip-Path.html", "w").write(
+    #     "<h1>My cool graph</h1>" + tls.get_embed(url))
 
 if __name__ == "__main__":
     x = main()

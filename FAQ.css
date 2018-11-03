@@ -12,10 +12,66 @@ body {
 }
 
 #Questions-Section {
-    margin-top: 50px;
+    margin-top: 150px;
 }
 
 #Frequently-Asked-Questions-Wrapper {
     margin: 0 200px;
     text-align: center;
+}
+
+#Question1-Heading {
+    font-size: 2rem;
+}
+
+#Question1-Content {
+    font-size: 1.2rem;
+}
+
+#Question2-Heading {
+    font-size: 2rem;
+}
+
+#Question2-Content {
+    font-size: 1.2rem;
+}
+
+#Question3-Heading {
+    font-size: 2rem;
+}
+
+#Question3-Content {
+    font-size: 1.2rem;
+}
+
+#Question4-Heading {
+    font-size: 2rem;
+}
+
+#Question4-Content {
+    font-size: 1.2rem;
+}
+
+#Question5-Heading {
+    font-size: 2rem;
+}
+
+#Question5-Content {
+    font-size: 1.2rem;
+}
+
+#Question6-Heading {
+    font-size: 2rem;
+}
+
+#Question6-Content {
+    font-size: 1.2rem;
+}
+
+#Question7-Heading {
+    font-size: 2rem;
+}
+
+#Question7-Content {
+    font-size: 1.2rem;
 }
