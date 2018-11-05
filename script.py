@@ -147,7 +147,7 @@ def main():
     """
     return {
 
-        'Average Bike Share Path Map': rows,
+        # 'Average Bike Share Path Map': rows,
 
         # Answer for Average Distance is in Kilometers(Km)
         # Answer to Question 1
@@ -901,16 +901,14 @@ def longitudes_and_latitudes_graph(rows):
     )
 
     # import pdb; pdb.set_trace()
-    import plotly
 
     fig = go.Figure(data=stations + bike_share_paths, layout=layout)
 
-    # ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
-    file = plotly.offline.plot(fig, auto_open=False)
-    print(file)
-    # print(url)
-    # open("Bike-Share-Trip-Path.html", "w").write(
-    #     "<h1>My cool graph</h1>" + tls.get_embed(url))
+    ply.sign_in('pnoonan32', open("PlotlyAPI.txt").read().strip())
+    url = ply.plot(fig, auto_open=False)
+    print(url)
+    open("Bike-Share-Trip-Path.html", "w").write(
+        "<h1>My cool graph</h1>" + tls.get_embed(url))
 
 if __name__ == "__main__":
     x = main()
