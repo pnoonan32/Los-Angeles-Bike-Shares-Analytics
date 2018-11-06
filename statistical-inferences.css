@@ -8,7 +8,7 @@ a#Home-Tab.nav-link.active {
 
 #Section-Title {
     margin-top: 80px;
-    margin-right: 853px !important;
+    margin-right: 853px;
     font-size: 20px;
 }
 
@@ -63,6 +63,10 @@ a#Home-Tab.nav-link.active {
     .navigation {
         margin-top:100px;
         margin-left:0px;
+    }
+
+    #Section-Title {
+        margin-right: 0px;
     }
 
   }
