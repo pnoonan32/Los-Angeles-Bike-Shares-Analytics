@@ -7,8 +7,7 @@ a#Regular-Commuters-Tab.nav-link.active {
 }
 
 #Section-Title {
-    margin-top: 80px;
-    margin-right: 853px !important;
+    /* margin-top: 80px; */
     font-size: 20px;
 }
 
@@ -18,9 +17,6 @@ a#Regular-Commuters-Tab.nav-link.active {
     font-size: 20px;
 }
 
-#Sub-Section {
-    margin-right: 770px;
-}
 
 #Heading-hr {
     border: 0;
