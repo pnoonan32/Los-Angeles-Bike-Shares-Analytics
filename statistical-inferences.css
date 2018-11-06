@@ -23,15 +23,6 @@ a#Home-Tab.nav-link.active {
     margin-top: 5px;
 }
 
-#Heading-hr {
-    border: 0;
-    border-top: 1px solid #434857;
-    margin-top:10px;
-    margin-left: 500px;
-    margin-right: 825px;
-    background-color: #fff
-}
-
 #Nav-hr {
     border: 0;
     border-top: 1px solid #434857;
