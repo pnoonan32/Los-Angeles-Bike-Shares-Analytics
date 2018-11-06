@@ -6,6 +6,10 @@ a#Combinations2-Tab.nav-link.active {
     background-color: #D65076;
 }
 
+#Section-Title {
+    margin-left: 12px;
+    font-size: 20px;
+}
 
 #Section-Title2 {
     margin-left: 12px;
