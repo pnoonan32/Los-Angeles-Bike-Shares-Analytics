@@ -16,3 +16,15 @@ a#Combinations2-Tab.nav-link.active {
     font-size: 20px;
 }
 
+.vertical-navigation {
+    margin-top: 100px
+}
+
+@media screen and (max-width: 767px) {
+
+    .vertical-navigation {
+        margin-top: 0px
+    }
+
+}
+
