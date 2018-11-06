@@ -40,8 +40,10 @@ a:hover, a:link {
 
 @media screen (and max-width: 767px) {
 
-    h1 {
-        font-size: 10vw !important;
+    h1.display-2 {
+        font-size: 13vw !important;
+        padding: 0 20px;
+        margin: 20px 0;
     }
     
   }
