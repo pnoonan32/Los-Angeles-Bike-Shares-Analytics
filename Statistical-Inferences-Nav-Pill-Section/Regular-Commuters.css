@@ -34,3 +34,15 @@ a#Regular-Commuters-Tab.nav-link.active {
     margin-right: 1080px;
     margin-bottom: 50px;
 }
+
+.vertical-navigation {
+    margin-top: 100px
+}
+
+@media screen and (max-width: 767px) {
+
+    .vertical-navigation {
+        margin-top: 0px
+    }
+
+}
