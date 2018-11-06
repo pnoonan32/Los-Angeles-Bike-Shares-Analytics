@@ -38,7 +38,11 @@ a:hover, a:link {
     border-bottom: 0px;
 }
 
+h1 {color: red !important}
+
 @media screen (and max-width: 767px) {
+
+    h1 {color: green !important}
 
     h1.display-2 {
         font-size: 13vw !important;
