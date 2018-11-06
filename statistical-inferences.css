@@ -46,3 +46,23 @@ a#Home-Tab.nav-link.active {
 #Statistical-Inferences-Wrapper {
     margin-left:300px;
 }
+
+.navigation {
+    margin-top:100px;
+    margin-left:75px;
+}
+
+@media only screen and (max-width:767px) {
+
+    h1.display-2 {
+        font-size: 13vw !important;
+        padding: 0 20px;
+        margin: 20px 0;
+    }
+    
+    .navigation {
+        margin-top:100px;
+        margin-left:0px;
+    }
+
+  }
